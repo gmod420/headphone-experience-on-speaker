@@ -35,6 +35,16 @@ class StaticInput:
         upRate = 1
         downRate = np.round(self.sampleRate/newFrequency)
         self.audio_data_L = scipy.io.resample_poly(self.audio_data_L, up=upRate, down=downRate)
-        self.audio_data_L = scipy.io.resample_poly(self.audio_data_L, up=upRate, down=downRate)
+        self.audio_data_R = scipy.io.resample_poly(self.audio_data_R, up=upRate, down=downRate)
         self.audio_data[0] = self.audio_data_L
         self.audio_data[1] = self.audio_data_R
+        self.sampleRate = newFrequency
+
+    def upsample(self, newFrequency):
+        uprate = np.round(newFrequency/self.sampleRate)
+        downRate = 1
+        self.audio_data_L = scipy.io.resample_poly(self.audio_data_L, up=uprate, down=downRate)
+        self.audio_data_R = scipy.io.resample_poly(self.audio_data_R, up=uprate, down=downRate)
+        self.audio_data[0] = self.audio_data_L
+        self.audio_data[1] = self.audio_data_R
+        self.sampleRate = newFrequency
