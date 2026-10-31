@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.io import wavfile
-import scipy.io.resample_poly
+from scipy.signal import resample_poly
 
-class StaticInput:
+class StereoWavAudio:
     sampleRate = 0
     audio_data = None
     audio_data_L = None
@@ -12,10 +12,10 @@ class StaticInput:
     filePath = None
 
     def __init__(self, filePath):
-        readFile()
+        self.readFile(filePath)
 
     def readFile(self, filePath):
-        self.sampleRate, self.audio_data = wavfile.read(path)
+        self.sampleRate, self.audio_data = wavfile.read(filePath)
         self.audio_data_L = self.audio_data[0]
         self.audio_data_R = self.audio_data[1]
 
@@ -34,8 +34,8 @@ class StaticInput:
     def downSample(self, newFrequency):
         upRate = 1
         downRate = np.round(self.sampleRate/newFrequency)
-        self.audio_data_L = scipy.io.resample_poly(self.audio_data_L, up=upRate, down=downRate)
-        self.audio_data_R = scipy.io.resample_poly(self.audio_data_R, up=upRate, down=downRate)
+        self.audio_data_L = resample_poly(self.audio_data_L, up=upRate, down=downRate)
+        self.audio_data_R = resample_poly(self.audio_data_R, up=upRate, down=downRate)
         self.audio_data[0] = self.audio_data_L
         self.audio_data[1] = self.audio_data_R
         self.sampleRate = newFrequency
@@ -43,8 +43,8 @@ class StaticInput:
     def upsample(self, newFrequency):
         uprate = np.round(newFrequency/self.sampleRate)
         downRate = 1
-        self.audio_data_L = scipy.io.resample_poly(self.audio_data_L, up=uprate, down=downRate)
-        self.audio_data_R = scipy.io.resample_poly(self.audio_data_R, up=uprate, down=downRate)
+        self.audio_data_L = resample_poly(self.audio_data_L, up=uprate, down=downRate)
+        self.audio_data_R = resample_poly(self.audio_data_R, up=uprate, down=downRate)
         self.audio_data[0] = self.audio_data_L
         self.audio_data[1] = self.audio_data_R
         self.sampleRate = newFrequency
